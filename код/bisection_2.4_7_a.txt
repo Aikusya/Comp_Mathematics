@@ -1,0 +1,25 @@
+public class SecantMethod {
+    public static void main(String[] args) {
+        double root = findRoot(x -> Math.pow(x, 3) + Math.pow(x, 2) - x + 7, 1.0, 2.0, 1e-3, 1000);
+        System.out.println("Approximate root: " + String.format("%.3f", root));
+    }
+
+    public static double findRoot(Equation equation, double x0, double x1, double tol, int maxIter) {
+        double x = x1;
+        double xPrev = x0;
+
+        int iterations = 0;
+        while (Math.abs(equation.evaluate(x)) > tol && iterations < maxIter) {
+            double temp = x;
+            x = x - (equation.evaluate(x) * (x - xPrev)) / (equation.evaluate(x) - equation.evaluate(xPrev));
+            xPrev = temp;
+            iterations++;
+        }
+
+        return x;
+    }
+
+    interface Equation {
+        double evaluate(double x);
+    }
+}

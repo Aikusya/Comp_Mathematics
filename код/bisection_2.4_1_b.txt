@@ -1,0 +1,31 @@
+public class Main {
+    public static void main(String[] args) {
+        double root = findRoot(x -> Math.pow(x, 3) - Math.pow(x, 2) - 1, 1.0, 2.0, 1e-3, 1000);
+        System.out.println("Approximate root: " + String.format("%.3f", root));
+    }
+
+    public static double findRoot(Equation equation, double a, double b, double tol, int maxIter) {
+        if (equation.evaluate(a) * equation.evaluate(b) >= 0) {
+            throw new IllegalArgumentException("The bisection method requires that f(a) and f(b) have opposite signs.");
+        }
+
+        int iterations = 0;
+        while ((b - a) / 2 > tol && iterations < maxIter) {
+            double c = (a + b) / 2;
+            if (equation.evaluate(c) == 0) {
+                break;
+            } else if (equation.evaluate(c) * equation.evaluate(a) < 0) {
+                b = c;
+            } else {
+                a = c;
+            }
+            iterations++;
+        }
+
+        return (a + b) / 2;
+    }
+
+    interface Equation {
+        double evaluate(double x);
+    }
+}
